@@ -17,6 +17,7 @@
         <activity android:name=".DetailfilmActivity" />
         <activity android:name=".PanierActivity" />
         <activity android:name=".ListefilmsActivity" />
+        <activity android:name=".ConnexionActivity" />
         <activity
             android:name=".MainActivity"
             android:exported="true">

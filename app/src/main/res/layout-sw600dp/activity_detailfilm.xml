@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Layout optimisé pour tablettes - Vue Master-Detail -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- En-tête -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="@dimen/padding_standard"
+            android:layout_marginBottom="@dimen/margin_small">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="←"
+                android:textSize="32sp"
+                android:textColor="#000000"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="8dp"
+                android:onClick="onRetourClicked"
+                android:layout_marginEnd="@dimen/margin_standard"/>
+
+            <TextView
+                android:id="@+id/tvHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Détail"
+                android:textSize="@dimen/text_size_title"
+                android:textStyle="bold"
+                android:textColor="#000000"/>
+
+        </LinearLayout>
+
+        <!-- Layout horizontal pour tablette: Affiche à gauche, infos à droite -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/padding_standard">
+
+            <!-- Colonne gauche: Affiche du film -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/margin_standard"
+                app:cardCornerRadius="@dimen/card_corner_radius"
+                app:cardElevation="@dimen/card_elevation"
+                app:cardBackgroundColor="#FFFFFF">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/padding_standard"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:id="@+id/ivFilmPoster"
+                        android:layout_width="@dimen/poster_width_detail"
+                        android:layout_height="@dimen/poster_height_detail"
+                        android:background="#E8E8E8"
+                        android:scaleType="centerCrop"
+                        android:contentDescription="Affiche du film"
+                        android:layout_marginBottom="@dimen/margin_standard"/>
+
+                    <TextView
+                        android:id="@+id/tvFilmSupport"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Sur place"
+                        android:textSize="@dimen/text_size_small"
+                        android:textColor="#666666"
+                        android:background="#F5F5F5"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="12dp"
+                        android:paddingTop="6dp"
+                        android:paddingBottom="6dp"/>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <!-- Colonne droite: Informations détaillées -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- Titre et infos principales -->
+                <TextView
+                    android:id="@+id/tvFilmTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Titre du Film"
+                    android:textSize="@dimen/text_size_large"
+                    android:textStyle="bold"
+                    android:textColor="#000000"
+                    android:layout_marginBottom="@dimen/margin_small"/>
+
+                <TextView
+                    android:id="@+id/tvFilmReleaseYear"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="2023 • Action"
+                    android:textSize="@dimen/text_size_normal"
+                    android:textColor="#666666"
+                    android:layout_marginBottom="@dimen/margin_small"/>
+
+                <TextView
+                    android:id="@+id/tvFilmActorPrincipal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="L'Acteur Principal"
+                    android:textSize="@dimen/text_size_normal"
+                    android:textColor="#666666"
+                    android:layout_marginBottom="@dimen/margin_standard"/>
+
+                <!-- Description -->
+                <TextView
+                    android:id="@+id/tvFilmDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Description du film..."
+                    android:textSize="@dimen/text_size_normal"
+                    android:textColor="#333333"
+                    android:lineSpacingExtra="4dp"
+                    android:layout_marginBottom="@dimen/margin_standard"/>
+
+                <!-- Grid pour les informations détaillées -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="@dimen/margin_small">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginEnd="@dimen/margin_small">
+
+                        <TextView
+                            android:id="@+id/tvFilmLength"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Durée: 120 min"
+                            android:textSize="@dimen/text_size_normal"
+                            android:textColor="#666666"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tvFilmRating"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Classification: PG"
+                            android:textSize="@dimen/text_size_normal"
+                            android:textColor="#666666"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tvFilmReplacementCost"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Coût de remplacement: 12.99€"
+                    android:textSize="@dimen/text_size_large"
+                    android:textStyle="bold"
+                    android:textColor="#000000"
+                    android:layout_marginBottom="@dimen/margin_standard"/>
+
+                <TextView
+                    android:id="@+id/tvFilmSpecialFeatures"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Bonus: Trailers"
+                    android:textSize="@dimen/text_size_normal"
+                    android:textColor="#666666"
+                    android:layout_marginBottom="@dimen/margin_standard"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- Section détails supplémentaires (pleine largeur) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/padding_standard"
+            android:layout_marginBottom="@dimen/margin_standard">
+
+            <!-- Réalisateurs -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Réalisateurs:"
+                android:textSize="@dimen/text_size_medium"
+                android:textStyle="bold"
+                android:textColor="#000000"
+                android:layout_marginBottom="@dimen/margin_small"/>
+
+            <TextView
+                android:id="@+id/tvFilmDirectors"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Aucun réalisateur"
+                android:textSize="@dimen/text_size_normal"
+                android:textColor="#666666"
+                android:layout_marginBottom="@dimen/margin_standard"/>
+
+            <!-- Acteurs -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Acteurs:"
+                android:textSize="@dimen/text_size_medium"
+                android:textStyle="bold"
+                android:textColor="#000000"
+                android:layout_marginBottom="@dimen/margin_small"/>
+
+            <TextView
+                android:id="@+id/tvFilmActors"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Aucun acteur"
+                android:textSize="@dimen/text_size_normal"
+                android:textColor="#666666"
+                android:layout_marginBottom="@dimen/margin_standard"/>
+
+            <!-- Catégories -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Catégories:"
+                android:textSize="@dimen/text_size_medium"
+                android:textStyle="bold"
+                android:textColor="#000000"
+                android:layout_marginBottom="@dimen/margin_small"/>
+
+            <TextView
+                android:id="@+id/tvFilmCategories"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Aucune catégorie"
+                android:textSize="@dimen/text_size_normal"
+                android:textColor="#666666"/>
+
+        </LinearLayout>
+
+        <!-- Boutons d'action (pleine largeur mais centrés) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/padding_standard"
+            android:paddingBottom="@dimen/padding_large"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/btnAjouterPanier"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="Ajouter au panier"
+                android:backgroundTint="@android:color/white"
+                android:textColor="#000000"
+                android:textSize="@dimen/text_size_medium"
+                android:textStyle="bold"
+                android:padding="@dimen/button_padding"
+                android:layout_marginEnd="@dimen/margin_small"
+                android:onClick="onAjouterPanierClicked"/>
+
+            <Button
+                android:id="@+id/btnReserverMaintenant"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="Réserver maintenant"
+                android:backgroundTint="#3B82F6"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/text_size_medium"
+                android:textStyle="bold"
+                android:padding="@dimen/button_padding"
+                android:onClick="onReserverMaintenantClicked"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

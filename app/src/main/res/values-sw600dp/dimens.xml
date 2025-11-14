@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Dimensions pour tablettes 7" (600dp et plus) -->
+
+    <!-- Padding et marges augmentés -->
+    <dimen name="padding_standard">24dp</dimen>
+    <dimen name="padding_small">12dp</dimen>
+    <dimen name="padding_large">32dp</dimen>
+    <dimen name="margin_standard">24dp</dimen>
+    <dimen name="margin_small">12dp</dimen>
+    <dimen name="margin_large">32dp</dimen>
+
+    <!-- Tailles de texte augmentées -->
+    <dimen name="text_size_title">28sp</dimen>
+    <dimen name="text_size_large">24sp</dimen>
+    <dimen name="text_size_medium">20sp</dimen>
+    <dimen name="text_size_normal">18sp</dimen>
+    <dimen name="text_size_small">16sp</dimen>
+    <dimen name="text_size_tiny">14sp</dimen>
+
+    <!-- Composants spécifiques -->
+    <dimen name="card_corner_radius">16dp</dimen>
+    <dimen name="card_elevation">4dp</dimen>
+    <dimen name="button_padding">20dp</dimen>
+
+    <!-- Images plus grandes -->
+    <dimen name="poster_width_list">100dp</dimen>
+    <dimen name="poster_height_list">150dp</dimen>
+    <dimen name="poster_width_detail">150dp</dimen>
+    <dimen name="poster_height_detail">225dp</dimen>
+
+    <!-- Layout liste -->
+    <dimen name="list_item_spacing">16dp</dimen>
+
+    <!-- EditText -->
+    <dimen name="edittext_height">56dp</dimen>
+</resources>

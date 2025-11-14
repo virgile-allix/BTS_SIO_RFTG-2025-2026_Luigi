@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Dimensions pour smartphones (par défaut) -->
+
+    <!-- Padding et marges -->
+    <dimen name="padding_standard">16dp</dimen>
+    <dimen name="padding_small">8dp</dimen>
+    <dimen name="padding_large">24dp</dimen>
+    <dimen name="margin_standard">16dp</dimen>
+    <dimen name="margin_small">8dp</dimen>
+    <dimen name="margin_large">24dp</dimen>
+
+    <!-- Tailles de texte -->
+    <dimen name="text_size_title">20sp</dimen>
+    <dimen name="text_size_large">18sp</dimen>
+    <dimen name="text_size_medium">16sp</dimen>
+    <dimen name="text_size_normal">14sp</dimen>
+    <dimen name="text_size_small">13sp</dimen>
+    <dimen name="text_size_tiny">11sp</dimen>
+
+    <!-- Composants spécifiques -->
+    <dimen name="card_corner_radius">12dp</dimen>
+    <dimen name="card_elevation">3dp</dimen>
+    <dimen name="button_padding">16dp</dimen>
+
+    <!-- Images -->
+    <dimen name="poster_width_list">70dp</dimen>
+    <dimen name="poster_height_list">105dp</dimen>
+    <dimen name="poster_width_detail">100dp</dimen>
+    <dimen name="poster_height_detail">150dp</dimen>
+
+    <!-- Layout liste -->
+    <dimen name="list_item_spacing">12dp</dimen>
+
+    <!-- EditText -->
+    <dimen name="edittext_height">48dp</dimen>
+</resources>

@@ -97,12 +97,46 @@ public class PanierActivity extends AppCompatActivity implements PanierAdapter.O
             return;
         }
 
-        // TODO: Envoyer la commande au serveur
-        Toast.makeText(this, "Réservation validée ! (à implémenter)", Toast.LENGTH_LONG).show();
-        Log.d("PanierActivity", "Réservation validée avec " + PanierManager.getInstance().getNombreItems() + " items");
+        // Préparer la requête de location
+        // TODO: Récupérer le vrai customer_id depuis la session de connexion
+        // Pour l'instant, on utilise un ID par défaut
+        int customerId = 1; // À remplacer par l'ID du client connecté
 
-        PanierManager.getInstance().viderPanier();
-        chargerPanier();
+        RentalRequest rentalRequest = new RentalRequest(customerId);
+
+        // Ajouter tous les films du panier à la requête
+        ArrayList<PanierManager.ItemPanier> items = PanierManager.getInstance().getItems();
+        for (PanierManager.ItemPanier item : items) {
+            rentalRequest.ajouterRental(item.getFilm().getFilm_id(), item.getQuantite());
+        }
+
+        Log.d("PanierActivity", "Envoi de la validation avec " + items.size() + " films différents");
+
+        // Envoyer la commande au serveur via AsyncTask
+        new ValiderPanierTask(this).execute(rentalRequest);
+    }
+
+    /**
+     * Méthode appelée par ValiderPanierTask après la réponse du serveur
+     */
+    public void traiterReponseValidation(String resultat) {
+        if (resultat.startsWith("ERREUR")) {
+            // Erreur lors de l'envoi
+            Toast.makeText(this, "Erreur lors de la validation : " + resultat, Toast.LENGTH_LONG).show();
+            Log.e("PanierActivity", "Erreur validation : " + resultat);
+        } else {
+            // Succès
+            Toast.makeText(this, "Réservation validée avec succès !", Toast.LENGTH_LONG).show();
+            Log.d("PanierActivity", "Réservation validée : " + resultat);
+
+            // Vider le panier après succès
+            PanierManager.getInstance().viderPanier();
+            chargerPanier();
+
+            // Possibilité de rediriger vers une page de confirmation
+            // Intent intent = new Intent(this, ConfirmationActivity.class);
+            // startActivity(intent);
+        }
     }
 
     public void onContinuerAchatsClicked(View view) {

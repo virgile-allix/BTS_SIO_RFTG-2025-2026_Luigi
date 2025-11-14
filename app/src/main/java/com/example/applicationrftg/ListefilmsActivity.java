@@ -29,21 +29,38 @@ public class ListefilmsActivity extends AppCompatActivity {
     private String listeFilmsResultat = "";
     private ArrayList<Film> tousLesFilms = new ArrayList<>();
     private ArrayAdapter<Film> adapter;
+    private View loadingLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_listefilms);
 
+        // Récupérer le layout de chargement
+        loadingLayout = findViewById(R.id.loadingLayout);
+
         URL urlAAppeler = null;
         try {
+            // Afficher le chargement
+            afficherChargement(true);
+
             // Appel du service REST pour récupérer la liste des films
             urlAAppeler = new URL("http://10.0.2.2:8180/films");
             new ListefilmsTask(this).execute(urlAAppeler);
         } catch (MalformedURLException mue) {
             Log.d("mydebug",">>>Pour ListefilmsTask - MalformedURLException mue="+mue.toString());
+            afficherChargement(false);
         } finally {
             urlAAppeler = null;
+        }
+    }
+
+    /**
+     * Afficher ou masquer le chargement
+     */
+    public void afficherChargement(boolean afficher) {
+        if (loadingLayout != null) {
+            loadingLayout.setVisibility(afficher ? View.VISIBLE : View.GONE);
         }
     }
 
@@ -51,12 +68,15 @@ public class ListefilmsActivity extends AppCompatActivity {
         listeFilmsResultat = resultatAppelRest;
         Log.d("mydebug",">>>Pour ListefilmsActivity - mettreAJourActivityApresAppelRest="+listeFilmsResultat);
 
+        // Masquer le chargement
+        afficherChargement(false);
+
         // Vérifier que le résultat n'est pas vide avant d'afficher
         if (resultatAppelRest != null && !resultatAppelRest.trim().isEmpty()) {
             afficherListeFilms(listeFilmsResultat);
         } else {
             Log.e("mydebug", ">>>Erreur : Le résultat de l'appel REST est vide ou null");
-            // TODO: Afficher un message d'erreur à l'utilisateur
+            android.widget.Toast.makeText(this, "Erreur lors du chargement des films", android.widget.Toast.LENGTH_LONG).show();
         }
     }
 

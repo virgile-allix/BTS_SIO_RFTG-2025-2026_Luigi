@@ -15,11 +15,11 @@ import java.net.URL;
 
 public class ConnexionTask extends AsyncTask<Void, Integer, String> {
 
-    private volatile MainActivity screen;
+    private volatile ConnexionActivity screen;
     private String identifiant;
     private String motDePasse;
 
-    public ConnexionTask(MainActivity s, String identifiant, String motDePasse) {
+    public ConnexionTask(ConnexionActivity s, String identifiant, String motDePasse) {
         this.screen = s;
         this.identifiant = identifiant;
         this.motDePasse = motDePasse;
