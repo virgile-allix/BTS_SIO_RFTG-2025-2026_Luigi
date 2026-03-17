@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.gson.Gson;
@@ -45,7 +46,7 @@ public class ListefilmsActivity extends AppCompatActivity {
             afficherChargement(true);
 
             // Appel du service REST pour récupérer la liste des films
-            urlAAppeler = new URL("http://10.0.2.2:8180/films");
+            urlAAppeler = new URL(AppConfig.getBaseUrl() + "/films");
             new ListefilmsTask(this).execute(urlAAppeler);
         } catch (MalformedURLException mue) {
             Log.d("mydebug",">>>Pour ListefilmsTask - MalformedURLException mue="+mue.toString());
@@ -76,7 +77,11 @@ public class ListefilmsActivity extends AppCompatActivity {
             afficherListeFilms(listeFilmsResultat);
         } else {
             Log.e("mydebug", ">>>Erreur : Le résultat de l'appel REST est vide ou null");
-            android.widget.Toast.makeText(this, "Erreur lors du chargement des films", android.widget.Toast.LENGTH_LONG).show();
+            new AlertDialog.Builder(this)
+                .setTitle("Erreur de chargement")
+                .setMessage("Impossible de récupérer la liste des films.\nVérifiez que le serveur est accessible : " + AppConfig.getBaseUrl())
+                .setPositiveButton("OK", null)
+                .show();
         }
     }
 
@@ -123,13 +128,15 @@ public class ListefilmsActivity extends AppCompatActivity {
                 textDescription.setText(film.getDescription());
                 textSupport.setText("Sur place");
 
-                // Bouton Détail
-                btnDetail.setOnClickListener(v -> {
+                // Clic sur toute la carte ou le bouton Détail → ouvrir détail
+                View.OnClickListener ouvrirDetail = v -> {
                     Intent intent = new Intent(ListefilmsActivity.this, DetailfilmActivity.class);
                     intent.putExtra("FILM_ID", film.getFilm_id());
                     intent.putExtra("FILM_TITLE", film.getTitle());
                     startActivity(intent);
-                });
+                };
+                convertView.setOnClickListener(ouvrirDetail);
+                btnDetail.setOnClickListener(ouvrirDetail);
 
                 // Bouton Ajouter
                 btnAjouter.setOnClickListener(v -> {

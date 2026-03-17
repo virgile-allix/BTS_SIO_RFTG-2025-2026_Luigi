@@ -99,6 +99,7 @@
                 android:paddingBottom="6dp"
                 android:minWidth="0dp"
                 android:minHeight="0dp"
+                android:focusable="false"
                 android:layout_marginBottom="8dp"/>
 
             <Button
@@ -115,7 +116,8 @@
                 android:paddingTop="6dp"
                 android:paddingBottom="6dp"
                 android:minWidth="0dp"
-                android:minHeight="0dp"/>
+                android:minHeight="0dp"
+                android:focusable="false"/>
 
         </LinearLayout>
 

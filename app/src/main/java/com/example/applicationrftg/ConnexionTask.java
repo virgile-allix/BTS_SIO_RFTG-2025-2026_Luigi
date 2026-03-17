@@ -3,14 +3,15 @@ package com.example.applicationrftg;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.MessageDigest;
 
 
 public class ConnexionTask extends AsyncTask<Void, Integer, String> {
@@ -35,7 +36,7 @@ public class ConnexionTask extends AsyncTask<Void, Integer, String> {
         String sResultatAppel = "";
 
         try {
-            URL urlAAppeler = new URL("http://10.0.2.2:8180/connexion");
+            URL urlAAppeler = new URL(AppConfig.getBaseUrl() + "/customers/verify");
 
             sResultatAppel = appelerServiceRestHttpPost(urlAAppeler, identifiant, motDePasse);
 
@@ -64,11 +65,11 @@ public class ConnexionTask extends AsyncTask<Void, Integer, String> {
             urlConnection.setRequestMethod("POST");
             urlConnection.setRequestProperty("Content-Type", "application/json");
             urlConnection.setRequestProperty("Accept", "application/json");
+            urlConnection.setRequestProperty("Authorization", "Bearer " + AppConfig.getToken());
             urlConnection.setRequestProperty("User-Agent", System.getProperty("http.agent"));
             urlConnection.setDoOutput(true);
-            urlConnection.setRequestProperty("Authorization","Bearer eyJhbGciOiJIUzI1NiJ9.e30.jg2m4pLbAlZv1h5uPQ6fU38X23g65eXMX8q-SXuIPDg");
 
-            String jsonInputString = "{\"nomUtilisateur\":\"" + identifiant + "\", \"motdepasseUtilisateur\":\"" + motDePasse + "\"}";
+            String jsonInputString = "{\"email\":\"" + identifiant + "\", \"password\":\"" + md5(motDePasse) + "\"}";
             Log.d("ConnexionTask", "JSON envoyé : " + jsonInputString);
 
             OutputStream os = urlConnection.getOutputStream();
@@ -82,13 +83,14 @@ public class ConnexionTask extends AsyncTask<Void, Integer, String> {
             Log.d("ConnexionTask", "Code de réponse HTTP : " + responseCode);
 
             if (responseCode == HttpURLConnection.HTTP_OK) {
-                InputStream in = new BufferedInputStream(urlConnection.getInputStream());
-
-                int codeCaractere = -1;
-                while ((codeCaractere = in.read()) != -1) {
-                    sResultatAppel = sResultatAppel + (char) codeCaractere;
+                BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8"));
+                StringBuilder sb = new StringBuilder();
+                String line;
+                while ((line = in.readLine()) != null) {
+                    sb.append(line);
                 }
                 in.close();
+                sResultatAppel = sb.toString();
 
                 Log.d("ConnexionTask", "Résultat reçu : " + sResultatAppel);
             } else {
@@ -109,5 +111,24 @@ public class ConnexionTask extends AsyncTask<Void, Integer, String> {
         }
 
         return sResultatAppel;
+    }
+
+    private String md5(String chaine) {
+        try {
+            byte[] hash = MessageDigest.getInstance("MD5").digest(chaine.getBytes());
+            StringBuilder sb = new StringBuilder();
+            for (byte b : hash) {
+                String hex = Integer.toHexString(b);
+                if (hex.length() == 1) {
+                    sb.append('0');
+                    sb.append(hex.charAt(hex.length() - 1));
+                } else {
+                    sb.append(hex.substring(hex.length() - 2));
+                }
+            }
+            return sb.toString();
+        } catch (Exception e) {
+            return chaine;
+        }
     }
 }

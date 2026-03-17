@@ -3,9 +3,9 @@ package com.example.applicationrftg;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -44,19 +44,20 @@ public class DetailfilmTask extends AsyncTask<URL,Integer,String> {
             urlConnection.setRequestProperty("Content-Type", "application/json");
             urlConnection.setRequestProperty("Accept", "application/json");
             urlConnection.setRequestProperty("User-Agent", System.getProperty("http.agent"));
-            urlConnection.setRequestProperty("Authorization","Bearer eyJhbGciOiJIUzI1NiJ9.e30.jg2m4pLbAlZv1h5uPQ6fU38X23g65eXMX8q-SXuIPDg");
+            urlConnection.setRequestProperty("Authorization","Bearer " + AppConfig.getToken());
 
 
             responseCode = urlConnection.getResponseCode();
             Log.d("mydebug", ">>>Code de réponse HTTP : " + responseCode);
 
-            InputStream in = new BufferedInputStream(urlConnection.getInputStream());
-
-            int codeCaractere = -1;
-            while ((codeCaractere = in.read()) != -1) {
-                sResultatAppel = sResultatAppel + (char) codeCaractere;
+            BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8"));
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = in.readLine()) != null) {
+                sb.append(line);
             }
             in.close();
+            sResultatAppel = sb.toString();
             Log.d("mydebug", ">>>Résultat obtenu : " + sResultatAppel.substring(0, Math.min(100, sResultatAppel.length())));
         } catch (IOException ioe) {
             Log.d("mydebug", ">>>Pour appelerServiceRestHttp - IOException ioe =" + ioe.toString());

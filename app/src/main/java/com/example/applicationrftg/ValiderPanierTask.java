@@ -3,22 +3,17 @@ package com.example.applicationrftg;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.google.gson.Gson;
-
-import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 
-/**
- * AsyncTask pour valider le panier et envoyer les locations au serveur
- * Appel POST à l'API REST
- */
-public class ValiderPanierTask extends AsyncTask<RentalRequest, Integer, String> {
+public class ValiderPanierTask extends AsyncTask<Void, Integer, String> {
 
     private volatile PanierActivity screen;
     private static final String TAG = "ValiderPanierTask";
@@ -33,29 +28,38 @@ public class ValiderPanierTask extends AsyncTask<RentalRequest, Integer, String>
     }
 
     @Override
-    protected String doInBackground(RentalRequest... requests) {
-        String sResultatAppel = "";
+    protected String doInBackground(Void... voids) {
+        int customerId = AppConfig.getCustomerId();
+        ArrayList<PanierManager.ItemPanier> items = PanierManager.getInstance().getItems();
 
-        try {
-            // URL de l'API pour créer des rentals
-            URL urlAAppeler = new URL("http://10.0.2.2:8180/rentals");
-
-            RentalRequest rentalRequest = requests[0];
-
-            // Convertir l'objet RentalRequest en JSON
-            Gson gson = new Gson();
-            String jsonRequestBody = gson.toJson(rentalRequest);
-
-            Log.d(TAG, "JSON à envoyer : " + jsonRequestBody);
-
-            sResultatAppel = appelerServiceRestHttpPost(urlAAppeler, jsonRequestBody);
-
-        } catch (Exception e) {
-            Log.e(TAG, "Erreur lors de la validation du panier : " + e.toString());
-            sResultatAppel = "ERREUR";
+        // 1. Envoyer chaque film au serveur via /cart/add
+        for (PanierManager.ItemPanier item : items) {
+            int filmId = Integer.parseInt(item.getFilm().getFilm_id());
+            for (int i = 0; i < item.getQuantite(); i++) {
+                try {
+                    URL url = new URL(AppConfig.getBaseUrl() + "/cart/add");
+                    String json = "{\"customerId\":" + customerId + ",\"filmId\":" + filmId + "}";
+                    Log.d(TAG, "cart/add : " + json);
+                    String result = envoyerPost(url, json);
+                    Log.d(TAG, "cart/add réponse : " + result);
+                    if (result.startsWith("ERREUR")) return result;
+                } catch (Exception e) {
+                    Log.e(TAG, "Erreur cart/add : " + e.toString());
+                    return "ERREUR_ADD";
+                }
+            }
         }
 
-        return sResultatAppel;
+        // 2. Valider le panier via /cart/checkout
+        try {
+            URL url = new URL(AppConfig.getBaseUrl() + "/cart/checkout");
+            String json = "{\"customerId\":" + customerId + "}";
+            Log.d(TAG, "cart/checkout : " + json);
+            return envoyerPost(url, json);
+        } catch (Exception e) {
+            Log.e(TAG, "Erreur cart/checkout : " + e.toString());
+            return "ERREUR_CHECKOUT";
+        }
     }
 
     @Override
@@ -64,62 +68,39 @@ public class ValiderPanierTask extends AsyncTask<RentalRequest, Integer, String>
         this.screen.traiterReponseValidation(resultat);
     }
 
-    /**
-     * Méthode pour envoyer la requête POST au serveur
-     */
-    private String appelerServiceRestHttpPost(URL urlAAppeler, String jsonBody) {
-        HttpURLConnection urlConnection = null;
-        int responseCode = -1;
-        String sResultatAppel = "";
-
+    private String envoyerPost(URL url, String jsonBody) throws IOException {
+        HttpURLConnection conn = null;
         try {
-            urlConnection = (HttpURLConnection) urlAAppeler.openConnection();
-            urlConnection.setRequestMethod("POST");
-            urlConnection.setRequestProperty("Content-Type", "application/json");
-            urlConnection.setRequestProperty("Accept", "application/json");
-            urlConnection.setRequestProperty("User-Agent", System.getProperty("http.agent"));
-            urlConnection.setRequestProperty("Authorization", "Bearer eyJhbGciOiJIUzI1NiJ9.e30.jg2m4pLbAlZv1h5uPQ6fU38X23g65eXMX8q-SXuIPDg");
-            urlConnection.setDoOutput(true);
+            conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-Type", "application/json");
+            conn.setRequestProperty("Accept", "application/json");
+            conn.setRequestProperty("Authorization", "Bearer " + AppConfig.getToken());
+            conn.setRequestProperty("User-Agent", System.getProperty("http.agent"));
+            conn.setDoOutput(true);
 
-            // Écrire le corps JSON de la requête
-            OutputStream os = urlConnection.getOutputStream();
+            OutputStream os = conn.getOutputStream();
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
             writer.write(jsonBody);
             writer.flush();
             writer.close();
             os.close();
 
-            responseCode = urlConnection.getResponseCode();
-            Log.d(TAG, "Code de réponse HTTP : " + responseCode);
+            int code = conn.getResponseCode();
+            Log.d(TAG, "HTTP " + code + " pour " + url);
 
-            // Lire la réponse
-            if (responseCode == HttpURLConnection.HTTP_OK || responseCode == HttpURLConnection.HTTP_CREATED) {
-                InputStream in = new BufferedInputStream(urlConnection.getInputStream());
-
-                int codeCaractere = -1;
-                while ((codeCaractere = in.read()) != -1) {
-                    sResultatAppel = sResultatAppel + (char) codeCaractere;
-                }
+            if (code == HttpURLConnection.HTTP_OK || code == HttpURLConnection.HTTP_CREATED) {
+                BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+                StringBuilder sb = new StringBuilder();
+                String line;
+                while ((line = in.readLine()) != null) sb.append(line);
                 in.close();
-
-                Log.d(TAG, "Résultat reçu : " + sResultatAppel);
+                return sb.toString();
             } else {
-                Log.e(TAG, "Erreur HTTP : " + responseCode);
-                sResultatAppel = "ERREUR_HTTP_" + responseCode;
+                return "ERREUR_HTTP_" + code;
             }
-
-        } catch (IOException ioe) {
-            Log.e(TAG, "IOException : " + ioe.toString());
-            sResultatAppel = "ERREUR_CONNEXION";
-        } catch (Exception e) {
-            Log.e(TAG, "Exception : " + e.toString());
-            sResultatAppel = "ERREUR";
         } finally {
-            if (urlConnection != null) {
-                urlConnection.disconnect();
-            }
+            if (conn != null) conn.disconnect();
         }
-
-        return sResultatAppel;
     }
 }

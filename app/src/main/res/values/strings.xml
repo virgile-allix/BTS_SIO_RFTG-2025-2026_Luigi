@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">applicationrftg</string>
+    <string name="app_name">RFTG - Luigi</string>
+    <string name="api_token">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJtYXR0aGlldSIsImlhdCI6MTc3MzMwODU3NSwiZXhwIjoyMDg4NjY4NTc1fQ.25msFCIrILfEA_Ti5Hbi3wZVMoBeHbuTh2K7hC50HjI</string>
 </resources>

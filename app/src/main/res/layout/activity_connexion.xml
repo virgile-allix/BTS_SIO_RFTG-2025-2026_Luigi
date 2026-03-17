@@ -6,6 +6,20 @@
     android:padding="24dp"
     android:background="@android:color/white">
 
+    <!-- Bouton croix rouge pour fermer l'appli -->
+    <Button
+        android:id="@+id/btnFermerAppli"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:text="✕"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:backgroundTint="#E53935"
+        android:padding="0dp"
+        android:onClick="onFermerAppliClicked"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
     <TextView
         android:id="@+id/tvTitle"
         android:layout_width="wrap_content"
@@ -19,7 +33,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/tvEmailLabel"
         app:layout_constraintVertical_chainStyle="packed"
-        android:layout_marginBottom="48dp"/>
+        android:layout_marginBottom="32dp"/>
 
     <TextView
         android:id="@+id/tvEmailLabel"
@@ -72,8 +86,64 @@
         app:layout_constraintTop_toBottomOf="@id/tvPasswordLabel"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/tvUrlLabel"
+        android:layout_marginBottom="20dp"/>
+
+    <!-- Sélecteur d'URL du serveur -->
+    <TextView
+        android:id="@+id/tvUrlLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="URL du serveur"
+        android:textSize="14sp"
+        android:textColor="@android:color/black"
+        app:layout_constraintTop_toBottomOf="@id/etMdp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/spinnerUrl"
+        android:layout_marginBottom="8dp"/>
+
+    <Spinner
+        android:id="@+id/spinnerUrl"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@android:drawable/edit_text"
+        android:padding="8dp"
+        app:layout_constraintTop_toBottomOf="@id/tvUrlLabel"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/tvUrlPersonnaliseeLabel"
+        android:layout_marginBottom="8dp"/>
+
+    <TextView
+        android:id="@+id/tvUrlPersonnaliseeLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Ou saisir une URL personnalisée :"
+        android:textSize="12sp"
+        android:textColor="#666666"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/spinnerUrl"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/etUrlPersonnalisee"
+        android:layout_marginBottom="4dp"/>
+
+    <EditText
+        android:id="@+id/etUrlPersonnalisee"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="http://..."
+        android:inputType="textUri"
+        android:padding="10dp"
+        android:textSize="13sp"
+        android:background="@android:drawable/edit_text"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/tvUrlPersonnaliseeLabel"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/btnConnexion"
-        android:layout_marginBottom="24dp"/>
+        android:layout_marginBottom="16dp"/>
 
     <Button
         android:id="@+id/btnConnexion"
@@ -85,7 +155,7 @@
         android:padding="16dp"
         android:textSize="16sp"
         android:onClick="onConnexionClicked"
-        app:layout_constraintTop_toBottomOf="@id/etMdp"
+        app:layout_constraintTop_toBottomOf="@id/etUrlPersonnalisee"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/tvMotDePasseOublie"

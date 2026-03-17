@@ -103,7 +103,6 @@ public class DetailfilmActivity extends AppCompatActivity {
         TextView tvReleaseYear = findViewById(R.id.tvFilmReleaseYear);
         TextView tvActorPrincipal = findViewById(R.id.tvFilmActorPrincipal);
         TextView tvSupport = findViewById(R.id.tvFilmSupport);
-        TextView tvReplacementCost = findViewById(R.id.tvFilmReplacementCost);
         TextView tvSpecialFeatures = findViewById(R.id.tvFilmSpecialFeatures);
         TextView tvDirectors = findViewById(R.id.tvFilmDirectors);
         TextView tvActors = findViewById(R.id.tvFilmActors);
@@ -130,9 +129,6 @@ public class DetailfilmActivity extends AppCompatActivity {
 
         // Support (DVD, Blu-ray, Sur place, etc.) - à définir selon les données
         tvSupport.setText("Sur place");
-
-        // Afficher uniquement le coût de remplacement
-        tvReplacementCost.setText("Coût de remplacement: " + film.getReplacement_cost() + "€");
 
         // Fonctionnalités spéciales
         String specialFeatures = film.getSpecial_features();

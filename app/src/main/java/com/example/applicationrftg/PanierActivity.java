@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -97,23 +98,10 @@ public class PanierActivity extends AppCompatActivity implements PanierAdapter.O
             return;
         }
 
-        // Préparer la requête de location
-        // TODO: Récupérer le vrai customer_id depuis la session de connexion
-        // Pour l'instant, on utilise un ID par défaut
-        int customerId = 1; // À remplacer par l'ID du client connecté
-
-        RentalRequest rentalRequest = new RentalRequest(customerId);
-
-        // Ajouter tous les films du panier à la requête
-        ArrayList<PanierManager.ItemPanier> items = PanierManager.getInstance().getItems();
-        for (PanierManager.ItemPanier item : items) {
-            rentalRequest.ajouterRental(item.getFilm().getFilm_id(), item.getQuantite());
-        }
-
-        Log.d("PanierActivity", "Envoi de la validation avec " + items.size() + " films différents");
+        Log.d("PanierActivity", "Envoi checkout pour customerId=" + AppConfig.getCustomerId());
 
         // Envoyer la commande au serveur via AsyncTask
-        new ValiderPanierTask(this).execute(rentalRequest);
+        new ValiderPanierTask(this).execute();
     }
 
     /**
@@ -122,8 +110,12 @@ public class PanierActivity extends AppCompatActivity implements PanierAdapter.O
     public void traiterReponseValidation(String resultat) {
         if (resultat.startsWith("ERREUR")) {
             // Erreur lors de l'envoi
-            Toast.makeText(this, "Erreur lors de la validation : " + resultat, Toast.LENGTH_LONG).show();
             Log.e("PanierActivity", "Erreur validation : " + resultat);
+            new AlertDialog.Builder(this)
+                .setTitle("Erreur de validation")
+                .setMessage("La validation du panier a échoué.\nVérifiez que le serveur est accessible : " + AppConfig.getBaseUrl() + "\nDétail : " + resultat)
+                .setPositiveButton("OK", null)
+                .show();
         } else {
             // Succès
             Toast.makeText(this, "Réservation validée avec succès !", Toast.LENGTH_LONG).show();
