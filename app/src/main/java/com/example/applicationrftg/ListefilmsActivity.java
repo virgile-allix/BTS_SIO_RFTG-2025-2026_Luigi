@@ -126,7 +126,7 @@ public class ListefilmsActivity extends AppCompatActivity {
                 // Remplissage avec les données du film
                 textNomFilm.setText(film.getTitle());
                 textDescription.setText(film.getDescription());
-                textSupport.setText("Sur place");
+                textSupport.setText(film.getRating());
 
                 // Clic sur toute la carte ou le bouton Détail → ouvrir détail
                 View.OnClickListener ouvrirDetail = v -> {
@@ -140,9 +140,8 @@ public class ListefilmsActivity extends AppCompatActivity {
 
                 // Bouton Ajouter
                 btnAjouter.setOnClickListener(v -> {
-                    PanierManager.getInstance().ajouterFilm(film);
-                    android.widget.Toast.makeText(getContext(), "Film ajouté au panier", android.widget.Toast.LENGTH_SHORT).show();
-                    Log.d("ListefilmsActivity", "Film ajouté au panier: " + film.getTitle());
+                    new AjouterPanierTask(ListefilmsActivity.this, film).execute();
+                    Log.d("ListefilmsActivity", "Ajout au panier via API: " + film.getTitle());
                 });
 
                 return convertView;

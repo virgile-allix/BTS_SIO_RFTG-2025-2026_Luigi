@@ -18,6 +18,7 @@ public class ListefilmsTask extends AsyncTask<URL,Integer,String> {
 
     @Override
     protected void onPreExecute() {
+        screen.afficherChargement(true);
     }
 
     @Override

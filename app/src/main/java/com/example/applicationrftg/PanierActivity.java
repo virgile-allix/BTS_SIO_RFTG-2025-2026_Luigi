@@ -116,6 +116,12 @@ public class PanierActivity extends AppCompatActivity implements PanierAdapter.O
                 .setMessage("La validation du panier a échoué.\nVérifiez que le serveur est accessible : " + AppConfig.getBaseUrl() + "\nDétail : " + resultat)
                 .setPositiveButton("OK", null)
                 .show();
+        } else if (resultat.contains("\"itemsCount\":0")) {
+            new AlertDialog.Builder(this)
+                .setTitle("Aucun exemplaire disponible")
+                .setMessage("Aucun film de votre panier n'est disponible en stock pour le moment.")
+                .setPositiveButton("OK", null)
+                .show();
         } else {
             // Succès
             Toast.makeText(this, "Réservation validée avec succès !", Toast.LENGTH_LONG).show();

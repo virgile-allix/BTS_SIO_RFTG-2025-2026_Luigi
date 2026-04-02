@@ -29,16 +29,17 @@ public class PanierManager {
     /**
      * Ajouter un film au panier (ou augmenter sa quantité si déjà présent)
      */
-    public void ajouterFilm(Film film) {
+    public ItemPanier ajouterFilm(Film film) {
         String filmId = film.getFilm_id();
 
         if (panier.containsKey(filmId)) {
-            // Le film est déjà dans le panier, augmenter la quantité
             ItemPanier item = panier.get(filmId);
             item.augmenterQuantite();
+            return item;
         } else {
-            // Nouveau film dans le panier
-            panier.put(filmId, new ItemPanier(film, 1));
+            ItemPanier item = new ItemPanier(film, 1);
+            panier.put(filmId, item);
+            return item;
         }
     }
 
@@ -102,10 +103,14 @@ public class PanierManager {
     public static class ItemPanier {
         private Film film;
         private int quantite;
+        private String statut;
+        private int rentalId;
 
         public ItemPanier(Film film, int quantite) {
             this.film = film;
             this.quantite = quantite;
+            this.statut = "Dans le panier";
+            this.rentalId = -1;
         }
 
         public Film getFilm() {
@@ -118,6 +123,22 @@ public class PanierManager {
 
         public void setQuantite(int quantite) {
             this.quantite = quantite;
+        }
+
+        public String getStatut() {
+            return statut;
+        }
+
+        public void setStatut(String statut) {
+            this.statut = statut;
+        }
+
+        public int getRentalId() {
+            return rentalId;
+        }
+
+        public void setRentalId(int rentalId) {
+            this.rentalId = rentalId;
         }
 
         public void augmenterQuantite() {

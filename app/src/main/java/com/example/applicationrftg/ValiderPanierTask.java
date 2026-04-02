@@ -30,27 +30,8 @@ public class ValiderPanierTask extends AsyncTask<Void, Integer, String> {
     @Override
     protected String doInBackground(Void... voids) {
         int customerId = AppConfig.getCustomerId();
-        ArrayList<PanierManager.ItemPanier> items = PanierManager.getInstance().getItems();
 
-        // 1. Envoyer chaque film au serveur via /cart/add
-        for (PanierManager.ItemPanier item : items) {
-            int filmId = Integer.parseInt(item.getFilm().getFilm_id());
-            for (int i = 0; i < item.getQuantite(); i++) {
-                try {
-                    URL url = new URL(AppConfig.getBaseUrl() + "/cart/add");
-                    String json = "{\"customerId\":" + customerId + ",\"filmId\":" + filmId + "}";
-                    Log.d(TAG, "cart/add : " + json);
-                    String result = envoyerPost(url, json);
-                    Log.d(TAG, "cart/add réponse : " + result);
-                    if (result.startsWith("ERREUR")) return result;
-                } catch (Exception e) {
-                    Log.e(TAG, "Erreur cart/add : " + e.toString());
-                    return "ERREUR_ADD";
-                }
-            }
-        }
-
-        // 2. Valider le panier via /cart/checkout
+        // Les films sont déjà ajoutés via AjouterPanierTask, on fait uniquement le checkout
         try {
             URL url = new URL(AppConfig.getBaseUrl() + "/cart/checkout");
             String json = "{\"customerId\":" + customerId + "}";
@@ -91,6 +72,13 @@ public class ValiderPanierTask extends AsyncTask<Void, Integer, String> {
 
             if (code == HttpURLConnection.HTTP_OK || code == HttpURLConnection.HTTP_CREATED) {
                 BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+                StringBuilder sb = new StringBuilder();
+                String line;
+                while ((line = in.readLine()) != null) sb.append(line);
+                in.close();
+                return sb.toString();
+            } else if (conn.getErrorStream() != null) {
+                BufferedReader in = new BufferedReader(new InputStreamReader(conn.getErrorStream(), "UTF-8"));
                 StringBuilder sb = new StringBuilder();
                 String line;
                 while ((line = in.readLine()) != null) sb.append(line);

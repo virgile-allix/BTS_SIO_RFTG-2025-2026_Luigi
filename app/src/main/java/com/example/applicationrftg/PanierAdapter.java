@@ -1,5 +1,7 @@
 package com.example.applicationrftg;
 
+import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -74,15 +76,24 @@ public class PanierAdapter extends RecyclerView.Adapter<PanierAdapter.PanierView
             Film film = item.getFilm();
 
             tvTitle.setText(film.getTitle());
-            tvSupport.setText("Sur place");
+            String statut = item.getStatut();
+            tvSupport.setText(statut);
+            if ("En cours".equals(statut)) {
+                tvSupport.setBackgroundColor(Color.parseColor("#DC2626"));
+                tvSupport.setTextColor(Color.WHITE);
+            } else {
+                tvSupport.setBackgroundColor(Color.parseColor("#F59E0B"));
+                tvSupport.setTextColor(Color.WHITE);
+            }
             tvQuantite.setText(String.valueOf(item.getQuantite()));
 
             // Bouton diminuer
             btnDiminuer.setOnClickListener(v -> {
                 int nouvelleQuantite = item.getQuantite() - 1;
                 if (nouvelleQuantite <= 0) {
-                    // Supprimer l'item si la quantité tombe à 0
-                    listener.onSupprimer(film.getFilm_id());
+                    Context ctx = itemView.getContext();
+                    new SupprimerPanierTask(ctx, film.getFilm_id(), item.getRentalId(),
+                        () -> listener.onSupprimer(film.getFilm_id())).execute();
                 } else {
                     listener.onQuantiteChange(film.getFilm_id(), nouvelleQuantite);
                 }
@@ -96,7 +107,9 @@ public class PanierAdapter extends RecyclerView.Adapter<PanierAdapter.PanierView
 
             // Bouton supprimer
             tvSupprimer.setOnClickListener(v -> {
-                listener.onSupprimer(film.getFilm_id());
+                Context ctx = itemView.getContext();
+                new SupprimerPanierTask(ctx, film.getFilm_id(), item.getRentalId(),
+                    () -> listener.onSupprimer(film.getFilm_id())).execute();
             });
         }
     }

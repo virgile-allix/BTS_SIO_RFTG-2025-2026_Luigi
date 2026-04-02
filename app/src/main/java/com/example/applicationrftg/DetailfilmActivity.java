@@ -34,7 +34,7 @@ public class DetailfilmActivity extends AppCompatActivity {
         // Appeler le service REST pour récupérer les détails du film
         URL urlAAppeler = null;
         try {
-            urlAAppeler = new URL("http://10.0.2.2:8180/films/" + filmId);
+            urlAAppeler = new URL(AppConfig.getBaseUrl() + "/films/" + filmId);
             new DetailfilmTask(this).execute(urlAAppeler);
         } catch (MalformedURLException mue) {
             Log.d("mydebug",">>>Pour DetailfilmTask - MalformedURLException mue="+mue.toString());
@@ -191,29 +191,11 @@ public class DetailfilmActivity extends AppCompatActivity {
 
     public void onAjouterPanierClicked(android.view.View view) {
         if (currentFilm != null) {
-            // Ajouter le film au panier local
-            PanierManager.getInstance().ajouterFilm(currentFilm);
-
-            Toast.makeText(this, "Film ajouté au panier", Toast.LENGTH_SHORT).show();
-            Log.d("DetailfilmActivity", "Film ajouté au panier: " + currentFilm.getTitle());
+            new AjouterPanierTask(this, currentFilm).execute();
+            Log.d("DetailfilmActivity", "Ajout au panier via API: " + currentFilm.getTitle());
         } else {
-            Toast.makeText(this, "Erreur: Film non disponible", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Aucun stock disponible", Toast.LENGTH_SHORT).show();
         }
     }
 
-    public void onReserverMaintenantClicked(android.view.View view) {
-        if (currentFilm != null) {
-            // Ajouter le film au panier et aller directement au panier
-            PanierManager.getInstance().ajouterFilm(currentFilm);
-
-            Toast.makeText(this, "Redirection vers le panier...", Toast.LENGTH_SHORT).show();
-            Log.d("DetailfilmActivity", "Réservation maintenant pour: " + currentFilm.getTitle());
-
-            // Rediriger vers l'activité Panier
-            Intent intent = new Intent(this, PanierActivity.class);
-            startActivity(intent);
-        } else {
-            Toast.makeText(this, "Erreur: Film non disponible", Toast.LENGTH_SHORT).show();
-        }
-    }
 }

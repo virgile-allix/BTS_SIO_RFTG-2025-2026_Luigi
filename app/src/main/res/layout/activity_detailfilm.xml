@@ -259,20 +259,7 @@
                 android:layout_marginBottom="12dp"
                 android:onClick="onAjouterPanierClicked"/>
 
-            <Button
-                android:id="@+id/btnReserverMaintenant"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Réserver maintenant"
-                android:backgroundTint="#3B82F6"
-                android:textColor="@android:color/white"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:padding="14dp"
-                android:layout_marginBottom="12dp"
-                android:onClick="onReserverMaintenantClicked"/>
-
-            <TextView
+<TextView
                 android:id="@+id/tvRetourCatalogue"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
